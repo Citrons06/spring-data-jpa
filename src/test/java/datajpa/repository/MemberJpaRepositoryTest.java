@@ -53,12 +53,19 @@ class MemberJpaRepositoryTest {
         //카운트 검증
         long count = repository.count();
         assertThat(count).isEqualTo(2);
+    }
 
-        //삭제 검증
-        repository.delete(member1);
-        repository.delete(member2);
+    @Test
+    void findByUsernameAndAgeGreaterThan() {
+        Member memberA = new Member("memberA", 10);
+        Member memberB = new Member("memberA", 20);
+        repository.save(memberA);
+        repository.save(memberB);
 
-        long deletedCount = repository.count();
-        assertThat(deletedCount).isEqualTo(0);
+        List<Member> result = repository.findByUsernameAndAgeGreaterThan("memberA", 15);
+        assertThat(result.get(0).getUsername()).isEqualTo("memberA");
+        assertThat(result.get(0).getAge()).isEqualTo(20);
+        assertThat(result.size()).isEqualTo(1);
+
     }
 }
