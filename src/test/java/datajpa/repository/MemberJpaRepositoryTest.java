@@ -68,4 +68,56 @@ class MemberJpaRepositoryTest {
         assertThat(result.size()).isEqualTo(1);
 
     }
+
+    @Test
+    void testNamedQuery() {
+        Member memberA = new Member("memberA", 10);
+        Member memberB = new Member("memberB", 20);
+        repository.save(memberA);
+        repository.save(memberB);
+
+        List<Member> result = repository.findByUsername("memberA");
+        Member findMember = result.get(0);
+        assertThat(findMember).isEqualTo(memberA);
+    }
+
+    @Test
+    void paging() throws Exception {
+        // given
+        repository.save(new Member("member1", 10));
+        repository.save(new Member("member2", 10));
+        repository.save(new Member("member3", 10));
+        repository.save(new Member("member4", 10));
+        repository.save(new Member("member5", 10));
+
+        int age = 10;
+        int offset = 0;
+        int limit = 3;
+
+        // when
+        List<Member> members = repository.findByPage(age, offset, limit);
+        long totalCount = repository.totalCount(age);
+
+        //totalPage = totalCount / size
+
+        // then
+        assertThat(members.size()).isEqualTo(3);
+        assertThat(totalCount).isEqualTo(5);
+    }
+
+    @Test
+    void bulkUpdate() {
+        //given
+        repository.save(new Member("member1", 15));
+        repository.save(new Member("member2", 19));
+        repository.save(new Member("member3", 20));
+        repository.save(new Member("member4", 21));
+        repository.save(new Member("member5", 30));
+
+        //when
+        int resultCount = repository.bulkAgePlus(20);
+
+        //then
+        assertThat(resultCount).isEqualTo(3);
+    }
 }
