@@ -28,6 +28,8 @@ class MemberRepositoryTest {
 
     @Autowired MemberRepository repository;
     @Autowired TeamRepository teamRepository;
+    @Autowired MemberQueryRepository memberQueryRepository;
+
     @PersistenceContext
     EntityManager em;
 
@@ -275,5 +277,10 @@ class MemberRepositoryTest {
 
         // when
         repository.findLockByUsername("member1");
+    }
+    
+    @Test
+    void callCustom() {
+        repository.findMemberCustom();
     }
 }
